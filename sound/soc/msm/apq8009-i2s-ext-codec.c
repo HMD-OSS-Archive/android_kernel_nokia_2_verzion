@@ -326,7 +326,7 @@ static struct snd_soc_dapm_route wcd9335_audio_paths[] = {
 };
 
 static char const *rx_bit_format_text[] = {"S16_LE", "S24_3LE", "S24_LE",
-					"S32_LE"};
+								"S32_LE"};
 static const char *const mi2s_tx_ch_text[] = {"One", "Two", "Three", "Four"};
 static char const *pri_rx_sample_rate_text[] = {"KHZ_48", "KHZ_96",
 					"KHZ_192", "KHZ_8",
@@ -2396,7 +2396,7 @@ static struct snd_soc_dai_link msm_compr_fe_dai[] = {
 	{/* hw:x,43 */
 		.name = "APQ8009 Compress3",
 		.stream_name = "Compress3",
-		.cpu_dai_name = "MultiMedia10",
+		.cpu_dai_name = "MultiMedia17",
 		.platform_name = "msm-compress-dsp",
 		.dynamic = 1,
 		.dpcm_capture = 1,
@@ -2406,12 +2406,12 @@ static struct snd_soc_dai_link msm_compr_fe_dai[] = {
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
 		.ignore_pmdown_time = 1,
-		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA10,
+		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA17,
 	},
 	{/* hw:x,44 */
 		.name = "APQ8009 Compress4",
 		.stream_name = "Compress4",
-		.cpu_dai_name = "MultiMedia11",
+		.cpu_dai_name = "MultiMedia18",
 		.platform_name = "msm-compress-dsp",
 		.dynamic = 1,
 		.dpcm_capture = 1,
@@ -2421,7 +2421,22 @@ static struct snd_soc_dai_link msm_compr_fe_dai[] = {
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
 		.ignore_pmdown_time = 1,
-		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA11,
+		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA18,
+	},
+	{/* hw:x,45 */
+		.name = "APQ8009 Compress5",
+		.stream_name = "Compress5",
+		.cpu_dai_name = "MultiMedia19",
+		.platform_name = "msm-compress-dsp",
+		.dynamic = 1,
+		.dpcm_capture = 1,
+		.trigger = {SND_SOC_DPCM_TRIGGER_POST,
+			SND_SOC_DPCM_TRIGGER_POST},
+		.codec_dai_name = "snd-soc-dummy-dai",
+		.codec_name = "snd-soc-dummy",
+		.ignore_suspend = 1,
+		.ignore_pmdown_time = 1,
+		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA19,
 	},
 };
 

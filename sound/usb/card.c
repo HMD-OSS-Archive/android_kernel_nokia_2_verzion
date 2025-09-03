@@ -257,6 +257,15 @@ static int snd_usb_create_streams(struct snd_usb_audio *chip, int ctrlif)
 		return -EINVAL;
 	}
 
+	rest_bytes = (void *)(host_iface->extra + host_iface->extralen) -
+		control_header;
+
+	/* just to be sure -- this shouldn't hit at all */
+	if (rest_bytes <= 0) {
+		dev_err(&dev->dev, "invalid control header\n");
+		return -EINVAL;
+	}
+
 	switch (protocol) {
 	default:
 		dev_warn(&dev->dev,
@@ -623,7 +632,6 @@ static void snd_usb_audio_disconnect(struct usb_device *dev,
 				     struct snd_usb_audio *chip)
 {
 	struct snd_card *card;
-	struct usb_mixer_interface *mixer;
 	struct list_head *p;
 	bool was_shutdown;
 
@@ -655,8 +663,7 @@ static void snd_usb_audio_disconnect(struct usb_device *dev,
 		}
 		/* release mixer resources */
 		list_for_each(p, &chip->mixer_list) {
-			mixer = list_entry(p, struct usb_mixer_interface, list);
-			snd_usb_mixer_disconnect(mixer);
+			snd_usb_mixer_disconnect(p);
 		}
 	}
 

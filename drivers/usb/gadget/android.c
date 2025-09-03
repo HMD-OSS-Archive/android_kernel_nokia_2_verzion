@@ -90,8 +90,6 @@ static const char longname[] = "Gadget Android";
 /* Default vendor and product IDs, overridden by userspace */
 #define VENDOR_ID		0x18D1
 #define PRODUCT_ID		0x0001
-#define BBOX_USB_TRAN_FAILED do {printk("BBox::%s: BBOX_USB_TRAN_FAILED\n", __func__); printk("BBox::UEC;3::0\n");} while(0);
-#define BBOX_USB_CONFIG_FAILED do {printk("BBox::%s: BBOX_USB_CONFIG_FAILED\n", __func__);printk("BBox::UEC;3::2\n");} while (0);
 
 #define ANDROID_DEVICE_NODE_NAME_LENGTH 11
 /* f_midi configuration */
@@ -515,6 +513,7 @@ static int android_enable(struct android_dev *dev)
 			err = usb_add_config(cdev, &conf->usb_config,
 						android_bind_config);
 			if (err < 0) {
+				printk("BBox::UEC;3::2\n"); // FIHTDC, IdaChiang, add bbs log
 				pr_err("%s: usb_add_config failed : err: %d\n",
 						__func__, err);
 				return err;
@@ -2853,7 +2852,7 @@ static int mass_storage_function_init(struct android_usb_function *f,
 
 	fsg_mod_data.removable[0] = true;
 	fsg_mod_data.cdrom[0] = true;//FihtdcCode@Alan,add for CD-ROM
-  	fsg_mod_data.ro[0] = true;//FihtdcCode@Alan,add for CD-ROM
+  fsg_mod_data.ro[0] = true;//FihtdcCode@Alan,add for CD-ROM
 	fsg_config_from_params(&m_config, &fsg_mod_data, fsg_num_buffers);
 	fsg_opts = fsg_opts_from_func_inst(config->f_ms_inst);
 	ret = fsg_common_set_num_buffers(fsg_opts->common, fsg_num_buffers);
@@ -3741,6 +3740,14 @@ static ssize_t enable_show(struct device *pdev, struct device_attribute *attr,
 	return snprintf(buf, PAGE_SIZE, "%d\n", dev->enabled);
 }
 
+/* +++ ChristineHYChang@fihtdc,add for scsi command +++ */
+static ssize_t root_show(struct device *dev, struct device_attribute *attr, char *buf)
+{
+  extern bool scsi_adb_root_flag(void);
+	return sprintf(buf, "%d\n", scsi_adb_root_flag()?1:0);
+}
+/* --- ChristineHYChang@fihtdc,add for scsi command --- */
+
 static ssize_t enable_store(struct device *pdev, struct device_attribute *attr,
 			    const char *buff, size_t size)
 {
@@ -3957,6 +3964,10 @@ static DEVICE_ATTR(state, S_IRUGO, state_show, NULL);
 static DEVICE_ATTR(remote_wakeup, S_IRUGO | S_IWUSR,
 		remote_wakeup_show, remote_wakeup_store);
 
+/* +++ ChristineHYChang@fihtdc,add for scsi command +++ */
+static DEVICE_ATTR(root, S_IRUGO, root_show, NULL);
+/* --- ChristineHYChang@fihtdc,add for scsi command --- */
+
 static struct device_attribute *android_usb_attributes[] = {
 	&dev_attr_idVendor,
 	&dev_attr_idProduct,
@@ -3978,6 +3989,9 @@ static struct device_attribute *android_usb_attributes[] = {
 	&dev_attr_pm_qos_state,
 	&dev_attr_state,
 	&dev_attr_remote_wakeup,
+	/* +++ ChristineHYChang@fihtdc,add for scsi command +++ */
+	&dev_attr_root,
+	/* --- ChristineHYChang@fihtdc,add for scsi command --- */
 	NULL
 };
 
@@ -4582,3 +4596,8 @@ static void __exit cleanup(void)
 	platform_driver_unregister(&android_platform_driver);
 }
 module_exit(cleanup);
+int android_usb_product_id(void)
+{
+       return device_desc.idProduct;
+}
+EXPORT_SYMBOL(android_usb_product_id);

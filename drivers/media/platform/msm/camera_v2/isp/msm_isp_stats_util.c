@@ -748,7 +748,6 @@ static int msm_isp_start_stats_stream(struct vfe_device *vfe_dev,
 	}
 	mutex_unlock(&vfe_dev->buf_mgr->lock);
 
-	mutex_unlock(&vfe_dev->buf_mgr->lock);
 	if (vfe_dev->axi_data.src_info[VFE_PIX_0].active) {
 		rc = msm_isp_stats_wait_for_cfg_done(vfe_dev);
 	} else {
@@ -896,6 +895,24 @@ int msm_isp_update_stats_stream(struct vfe_device *vfe_dev, void *arg)
 	struct msm_vfe_axi_stream_update_cmd *update_cmd = arg;
 	struct msm_vfe_axi_stream_cfg_update_info *update_info = NULL;
 	struct msm_isp_sw_framskip *sw_skip_info = NULL;
+
+	if (update_cmd->num_streams > MSM_ISP_STATS_MAX) {
+		pr_err("%s: Invalid num_streams %d\n",
+			__func__, update_cmd->num_streams);
+		return -EINVAL;
+	}
+
+	if (update_cmd->num_streams > MSM_ISP_STATS_MAX) {
+		pr_err("%s: Invalid num_streams %d\n",
+			__func__, update_cmd->num_streams);
+		return -EINVAL;
+	}
+
+	if (update_cmd->num_streams > MSM_ISP_STATS_MAX) {
+		pr_err("%s: Invalid num_streams %d\n",
+			__func__, update_cmd->num_streams);
+		return -EINVAL;
+	}
 
 	if (update_cmd->num_streams > MSM_ISP_STATS_MAX) {
 		pr_err("%s: Invalid num_streams %d\n",
