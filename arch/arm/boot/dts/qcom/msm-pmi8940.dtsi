@@ -314,6 +314,7 @@
 			// MOD start FG-cutoff-voltage hangxingjiang 2018.01.05
 			qcom,fg-cutoff-voltage-mv = <3300>;
 			// MOD end FG-cutoff-voltage hangxingjiang 2018.01.05
+			qcom,vbat-estimate-diff-mv = <100>;
 			qcom,cycle-counter-en;
 			qcom,capacity-learning-on;
 			// ADD start Battery temp protection hangxing.jiang 2018.01.05
